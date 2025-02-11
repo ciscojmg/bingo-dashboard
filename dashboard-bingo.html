@@ -9,138 +9,137 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&display=swap');
 
-body {
-    font-family: 'Fredoka', sans-serif;
-    text-align: center;
-    background: linear-gradient(135deg, #fff3b0, #f4d35e);
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+        body {
+            font-family: 'Fredoka', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #fff3b0, #f4d35e);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
 
-.bingo-container {
-    display: flex;
-    justify-content: center;
-    gap: 60px;
-    margin: 20px;
-    align-items: flex-start;
-}
+        .bingo-container {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            margin: 30px;
+            align-items: flex-start;
+        }
 
-/* Cartón Dashboard Bingo (Más grande) */
-.dashboard-card {
-    max-width: 500px;
-    padding: 25px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Más sombra para efecto realista */
-    text-align: center;
-    transform: scale(1.05);
-}
+        /* Cartón Dashboard Bingo (Más grande) */
+        .dashboard-card {
+            max-width: 520px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+            text-align: center;
+        }
 
-/* Cartón Jugador (Más pequeño) */
-.player-card {
-    max-width: 350px;
-    padding: 20px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-    text-align: center;
-}
+        /* Cartón Jugador (Más pequeño) */
+        .player-card {
+            max-width: 350px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.25); /* Sombra realista */
+            text-align: center;
+        }
 
-.bingo-logo,
-.bingo-wheel {
-    width: 120px;
-    margin: 10px;
-}
+        .bingo-logo,
+        .bingo-wheel {
+            width: 120px;
+            margin: 10px;
+        }
 
-h1,
-h2 {
-    font-weight: 600;
-}
+        h1,
+        h2 {
+            font-weight: 600;
+        }
 
-.bingo-header {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
+        .bingo-header {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 
-/* Tablero de números */
-.bingo-board {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin: 20px 0;
-    place-items: center;
-}
+        /* Tablero de números */
+        .bingo-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+            place-items: center;
+        }
 
-/* Celdas del cartón grande */
-.bingo-cell {
-    width: 70px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #f4d35e, #ee964b);
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.1s;
-}
+        /* Celdas del cartón grande */
+        .bingo-cell {
+            width: 75px;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f4d35e, #ee964b);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s, box-shadow 0.2s;
+        }
 
-/* Efecto al marcar celdas */
-.bingo-cell.marked {
-    background: linear-gradient(135deg, #ff5733, #c70039);
-    box-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
-    transform: scale(1.1);
-}
+        /* Efecto al marcar celdas */
+        .bingo-cell.marked {
+            background: linear-gradient(135deg, #ff5733, #c70039);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
 
-/* Celdas del cartón del jugador (sin números) */
-.player-cell {
-    width: 55px;
-    height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #ddd;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.3s;
-}
+        /* Celdas del cartón del jugador (sin números) */
+        .player-cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+        }
 
-/* Efecto al marcar celdas del jugador */
-.player-cell.marked {
-    background: linear-gradient(135deg, #3498db, #2c3e50);
-    box-shadow: 0 0 12px rgba(52, 152, 219, 0.8);
-}
+        /* Efecto al marcar celdas del jugador */
+        .player-cell.marked {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.8);
+            transform: scale(1.1);
+        }
 
-/* Botón para resetear */
-.reset-btn {
-    padding: 12px 25px;
-    background: #f77f00;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    transition: background 0.2s, transform 0.1s;
-}
+        /* Botón para resetear */
+        .reset-btn {
+            padding: 12px 30px;
+            background: #f77f00;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.2s, transform 0.1s;
+        }
 
-.reset-btn:hover {
-    background: #ff9f1c;
-    transform: scale(1.05);
-}
+        .reset-btn:hover {
+            background: #ff9f1c;
+            transform: scale(1.05);
+        }
 
-.bingo-img-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
+        .bingo-img-container {
+            display: flex;
+        }
     </style>
 </head>
 
@@ -154,7 +153,7 @@ h2 {
 
     <div class="bingo-container">
         <!-- Cartón principal -->
-        <div class="bingo-card">
+        <div class="dashboard-card">
             <h2>Dashboard Bingo</h2>
             <div class="bingo-header">
                 <div>B</div>
@@ -168,7 +167,7 @@ h2 {
         </div>
 
         <!-- Cartón del Jugador -->
-        <div class="bingo-card">
+        <div class="player-card">
             <h2>Cartón del Jugador</h2>
             <div class="bingo-header">
                 <div>B</div>
@@ -224,11 +223,6 @@ h2 {
                 }
             }
         }
-
-        function resetBoard(boardId) {
-            document.querySelectorAll(`#${boardId} .bingo-cell, #${boardId} .player-cell`).forEach(cell => cell.classList.remove("marked"));
-        }
     </script>
 </body>
-
 </html>
