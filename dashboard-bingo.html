@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Fredoka', sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #fff3b0, #f4d35e);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bingo-container {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin: 20px;
+    align-items: flex-start;
+}
+
+/* Cartón Dashboard Bingo (Más grande) */
+.dashboard-card {
+    max-width: 500px;
+    padding: 25px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Más sombra para efecto realista */
+    text-align: center;
+    transform: scale(1.05);
+}
+
+/* Cartón Jugador (Más pequeño) */
+.player-card {
+    max-width: 350px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+.bingo-logo,
+.bingo-wheel {
+    width: 120px;
+    margin: 10px;
+}
+
+h1,
+h2 {
+    font-weight: 600;
+}
+
+.bingo-header {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Tablero de números */
+.bingo-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+    place-items: center;
+}
+
+/* Celdas del cartón grande */
+.bingo-cell {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f4d35e, #ee964b);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+}
+
+/* Efecto al marcar celdas */
+.bingo-cell.marked {
+    background: linear-gradient(135deg, #ff5733, #c70039);
+    box-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+/* Celdas del cartón del jugador (sin números) */
+.player-cell {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+/* Efecto al marcar celdas del jugador */
+.player-cell.marked {
+    background: linear-gradient(135deg, #3498db, #2c3e50);
+    box-shadow: 0 0 12px rgba(52, 152, 219, 0.8);
+}
+
+/* Botón para resetear */
+.reset-btn {
+    padding: 12px 25px;
+    background: #f77f00;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.reset-btn:hover {
+    background: #ff9f1c;
+    transform: scale(1.05);
+}
+
+.bingo-img-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+    </style>
+</head>
+
+<body>
+    <div class="bingo-img-container">
+        <img src="https://alecuna.github.io/Microproyecto1/logo.png" alt="Bingo Logo" class="bingo-logo">
+        <img src="https://alecuna.github.io/Microproyecto1/logo2.png" alt="Bingo Rueda" class="bingo-wheel">
+    </div>
+
+    <h1>Bienvenidos al Bingo</h1>
+
+    <div class="bingo-container">
+        <!-- Cartón principal -->
+        <div class="bingo-card">
+            <h2>Dashboard Bingo</h2>
+            <div class="bingo-header">
+                <div>B</div>
+                <div>I</div>
+                <div>N</div>
+                <div>G</div>
+                <div>O</div>
+            </div>
+            <div class="bingo-board" id="bingoBoard"></div>
+            <button onclick="resetBoard('bingoBoard')" class="reset-btn">Desmarcar Todo</button>
+        </div>
+
+        <!-- Cartón del Jugador -->
+        <div class="bingo-card">
+            <h2>Cartón del Jugador</h2>
+            <div class="bingo-header">
+                <div>B</div>
+                <div>I</div>
+                <div>N</div>
+                <div>G</div>
+                <div>O</div>
+            </div>
+            <div class="bingo-board" id="playerBoard"></div>
+            <button onclick="resetBoard('playerBoard')" class="reset-btn">Desmarcar Todo</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            generateBingoBoard("bingoBoard");
+            generatePlayerBoard("playerBoard");
+        });
+
+        function generateBingoBoard(boardId) {
+            const board = document.getElementById(boardId);
+            board.innerHTML = "";
+
+            const columns = {
+                B: Array.from({ length: 15 }, (_, i) => i + 1),
+                I: Array.from({ length: 15 }, (_, i) => i + 16),
+                N: Array.from({ length: 15 }, (_, i) => i + 31),
+                G: Array.from({ length: 15 }, (_, i) => i + 46),
+                O: Array.from({ length: 15 }, (_, i) => i + 61)
+            };
+
+            for (let i = 0; i < 15; i++) {
+                for (let letter in columns) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("bingo-cell");
+                    cell.textContent = columns[letter][i];
+                    cell.addEventListener("click", () => cell.classList.toggle("marked"));
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        function generatePlayerBoard(boardId) {
+            const board = document.getElementById(boardId);
+            board.innerHTML = "";
+
+            for (let i = 0; i < 5; i++) {
+                for (let j = 0; j < 5; j++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("player-cell");
+                    cell.addEventListener("click", () => cell.classList.toggle("marked"));
+                    board.appendChild(cell);
+                }
+            }
+        }
+
+        function resetBoard(boardId) {
+            document.querySelectorAll(`#${boardId} .bingo-cell, #${boardId} .player-cell`).forEach(cell => cell.classList.remove("marked"));
+        }
+    </script>
+</body>
+
+</html>
