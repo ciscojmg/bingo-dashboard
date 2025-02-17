@@ -62,7 +62,8 @@
         }
 
         /* Celdas de Bingo */
-        .bingo-cell, .player-cell {
+        .bingo-cell,
+        .player-cell {
             width: 60px;
             height: 60px;
             display: flex;
@@ -104,6 +105,7 @@
             font-size: 18px;
             font-weight: bold;
             transition: background 0.2s, transform 0.1s;
+            margin-top: 20px;
         }
 
         .reset-btn:hover {
@@ -118,7 +120,8 @@
                 padding: 5px;
             }
 
-            .bingo-cell, .player-cell {
+            .bingo-cell,
+            .player-cell {
                 width: 50px;
                 height: 50px;
                 font-size: 18px;
@@ -131,7 +134,8 @@
                 padding: 2px;
             }
 
-            .bingo-cell, .player-cell {
+            .bingo-cell,
+            .player-cell {
                 width: 40px;
                 height: 40px;
                 font-size: 14px;
@@ -159,27 +163,40 @@
                 <div class="bingo-card">
                     <h2>Dashboard Bingo</h2>
                     <div class="bingo-header">
-                        <div>B</div><div>I</div><div>N</div><div>G</div><div>O</div>
+                        <div>B</div>
+                        <div>I</div>
+                        <div>N</div>
+                        <div>G</div>
+                        <div>O</div>
                     </div>
                     <div class="bingo-board" id="bingoBoard"></div>
                     <div class="bingo-board" id="bingoPercentage"></div>
+                    <div class="progress mt-3">
+                        <div id="bingoProgressBar" class="progress-bar bg-warning" role="progressbar" style="width: 0%;"
+                        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+
                     <button onclick="resetBoard('bingoBoard')" class="reset-btn">Desmarcar Todo</button>
                 </div>
             </div>
-        
+
             <!-- Cartón del Jugador -->
             <div class="col-12 col-md-12 col-lg-5 mb-4">
                 <div class="bingo-card">
                     <h2>Cartón del Jugador</h2>
                     <div class="bingo-header">
-                        <div>B</div><div>I</div><div>N</div><div>G</div><div>O</div>
+                        <div>B</div>
+                        <div>I</div>
+                        <div>N</div>
+                        <div>G</div>
+                        <div>O</div>
                     </div>
                     <div class="bingo-board" id="playerBoard"></div>
                     <button onclick="resetBoard('playerBoard')" class="reset-btn">Desmarcar Todo</button>
                 </div>
             </div>
         </div>
-        
+
     </div>
 
     <script>
@@ -188,13 +205,25 @@
             generatePercentageRow("bingoPercentage");
             generatePlayerBoard("playerBoard");
         });
-    
+
+        function updateTotalProgress() {
+            const totalCells = 75; // Total de bolitas
+            const markedCells = document.querySelectorAll(`.bingo-cell.marked`).length;
+            const percentage = Math.round((markedCells / totalCells) * 100);
+
+            // Actualizar la barra de progreso
+            const progressBar = document.getElementById("bingoProgressBar");
+            progressBar.style.width = percentage + "%";
+            progressBar.setAttribute("aria-valuenow", percentage);
+            progressBar.textContent = percentage + "%";
+        }
+
         function generateBingoBoard(boardId) {
             const board = document.getElementById(boardId);
             board.innerHTML = "";
             const columns = ["B", "I", "N", "G", "O"];
-            
-            for (let row = 0; row < 15; row++) { // Itera por filas primero
+
+            for (let row = 0; row < 15; row++) {
                 for (let col = 0; col < columns.length; col++) {
                     const num = row + 1 + col * 15; // Genera el número correcto en la columna
                     const cell = document.createElement("div");
@@ -204,12 +233,13 @@
                     cell.addEventListener("click", () => {
                         cell.classList.toggle("marked");
                         updatePercentage(col);
+                        updateTotalProgress(); // Actualiza la barra de progreso general
                     });
                     board.appendChild(cell);
                 }
             }
         }
-    
+
         function generatePlayerBoard(boardId) {
             const board = document.getElementById(boardId);
             board.innerHTML = "";
@@ -222,11 +252,11 @@
                 }
             }
         }
-    
+
         function generatePercentageRow(boardId) {
             const board = document.getElementById(boardId);
             board.innerHTML = "";
-    
+
             for (let i = 0; i < 5; i++) {
                 const cell = document.createElement("div");
                 cell.classList.add("percentage-cell");
@@ -235,20 +265,22 @@
                 board.appendChild(cell);
             }
         }
-    
+
         function updatePercentage(columnIndex) {
             const totalCells = 15;
             const markedCells = document.querySelectorAll(`.bingo-cell.marked[data-column="${columnIndex}"]`).length;
             const percentage = Math.round((markedCells / totalCells) * 100);
-            
+
             document.querySelector(`.percentage-cell[data-column="${columnIndex}"]`).textContent = percentage + "%";
         }
-    
+
         function resetBoard(boardId) {
             document.querySelectorAll(`#${boardId} .bingo-cell`).forEach(cell => cell.classList.remove("marked"));
             document.querySelectorAll(".percentage-cell").forEach(cell => cell.textContent = "0%");
+            updateTotalProgress(); // Reinicia la barra de progreso
         }
     </script>
-    
+
 </body>
+
 </html>
