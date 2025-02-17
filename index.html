@@ -330,10 +330,17 @@
         }
 
         function resetBoard(boardId) {
-            document.querySelectorAll(`#${boardId} .bingo-cell`).forEach(cell => cell.classList.remove("marked"));
-            document.querySelectorAll(".percentage-cell").forEach(cell => cell.textContent = "0%");
-            lastConfettiThreshold = 0; // Reinicia la condición del confetti
-            updateTotalProgress(); // Reinicia la barra de progreso
+            // Desmarcar las celdas tanto del Bingo principal como del Cartón del Jugador
+            document.querySelectorAll(`#${boardId} .bingo-cell, #${boardId} .player-cell`).forEach(cell => {
+                cell.classList.remove("marked");
+            });
+
+            // Si es el cartón principal, reiniciar porcentajes y confetti
+            if (boardId === "bingoBoard") {
+                document.querySelectorAll(".percentage-cell").forEach(cell => cell.textContent = "0%");
+                lastConfettiThreshold = 0; // Reinicia la condición del confetti
+                updateTotalProgress(); // Reinicia la barra de progreso
+            }
         }
     </script>
 
