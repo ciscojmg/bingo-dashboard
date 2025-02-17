@@ -173,7 +173,7 @@
                     <div class="bingo-board" id="bingoPercentage"></div>
                     <div class="progress mt-3">
                         <div id="bingoProgressBar" class="progress-bar bg-warning" role="progressbar" style="width: 0%;"
-                        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
                     </div>
 
                     <button onclick="resetBoard('bingoBoard')" class="reset-btn">Desmarcar Todo</button>
@@ -199,7 +199,11 @@
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0"></script>
+
     <script>
+        let lastConfettiThreshold = 0; // Almacena el último umbral de confetti lanzado
+
         document.addEventListener("DOMContentLoaded", function () {
             generateBingoBoard("bingoBoard");
             generatePercentageRow("bingoPercentage");
@@ -216,6 +220,57 @@
             progressBar.style.width = percentage + "%";
             progressBar.setAttribute("aria-valuenow", percentage);
             progressBar.textContent = percentage + "%";
+
+            // 🚀 Disparar confetti progresivo en cada múltiplo de 10% (10, 20, 30... hasta 100)
+            if (percentage >= lastConfettiThreshold + 10) {
+                fireConfetti(percentage);
+                lastConfettiThreshold += 10; // Actualizar el umbral del confetti lanzado
+            }
+
+            // Resetear si el porcentaje baja (para poder lanzar confetti otra vez)
+            if (percentage < lastConfettiThreshold) {
+                lastConfettiThreshold = Math.floor(percentage / 10) * 10;
+            }
+        }
+
+        function fireConfetti(percentage) {
+            const count = 200 + (percentage * 2); // Aumenta la cantidad de confetti
+            const defaults = { origin: { y: 0.7 } };
+
+            function fire(particleRatio, opts) {
+                confetti(
+                    Object.assign({}, defaults, opts, {
+                        particleCount: Math.floor(count * particleRatio),
+                    })
+                );
+            }
+
+            fire(0.25, {
+                spread: 26 + percentage / 2,
+                startVelocity: 55 + percentage / 3,
+            });
+
+            fire(0.2, {
+                spread: 60 + percentage / 2,
+            });
+
+            fire(0.35, {
+                spread: 100 + percentage / 2,
+                decay: 0.91,
+                scalar: 0.8 + percentage / 100,
+            });
+
+            fire(0.1, {
+                spread: 120 + percentage / 2,
+                startVelocity: 25 + percentage / 3,
+                decay: 0.92,
+                scalar: 1.2 + percentage / 100,
+            });
+
+            fire(0.1, {
+                spread: 120 + percentage / 2,
+                startVelocity: 45 + percentage / 3,
+            });
         }
 
         function generateBingoBoard(boardId) {
@@ -277,9 +332,11 @@
         function resetBoard(boardId) {
             document.querySelectorAll(`#${boardId} .bingo-cell`).forEach(cell => cell.classList.remove("marked"));
             document.querySelectorAll(".percentage-cell").forEach(cell => cell.textContent = "0%");
+            lastConfettiThreshold = 0; // Reinicia la condición del confetti
             updateTotalProgress(); // Reinicia la barra de progreso
         }
     </script>
+
 
 </body>
 
