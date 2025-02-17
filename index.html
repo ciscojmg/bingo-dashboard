@@ -162,6 +162,7 @@
                         <div>B</div><div>I</div><div>N</div><div>G</div><div>O</div>
                     </div>
                     <div class="bingo-board" id="bingoBoard"></div>
+                    <div class="bingo-board" id="bingoPercentage"></div>
                     <button onclick="resetBoard('bingoBoard')" class="reset-btn">Desmarcar Todo</button>
                 </div>
             </div>
@@ -184,31 +185,31 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             generateBingoBoard("bingoBoard");
+            generatePercentageRow("bingoPercentage");
             generatePlayerBoard("playerBoard");
         });
-
+    
         function generateBingoBoard(boardId) {
             const board = document.getElementById(boardId);
             board.innerHTML = "";
-            const columns = {
-                B: Array.from({ length: 15 }, (_, i) => i + 1),
-                I: Array.from({ length: 15 }, (_, i) => i + 16),
-                N: Array.from({ length: 15 }, (_, i) => i + 31),
-                G: Array.from({ length: 15 }, (_, i) => i + 46),
-                O: Array.from({ length: 15 }, (_, i) => i + 61)
-            };
-
-            for (let i = 0; i < 15; i++) {
-                for (let letter in columns) {
+            const columns = ["B", "I", "N", "G", "O"];
+            
+            for (let row = 0; row < 15; row++) { // Itera por filas primero
+                for (let col = 0; col < columns.length; col++) {
+                    const num = row + 1 + col * 15; // Genera el número correcto en la columna
                     const cell = document.createElement("div");
                     cell.classList.add("bingo-cell");
-                    cell.textContent = columns[letter][i];
-                    cell.addEventListener("click", () => cell.classList.toggle("marked"));
+                    cell.setAttribute("data-column", col);
+                    cell.textContent = num;
+                    cell.addEventListener("click", () => {
+                        cell.classList.toggle("marked");
+                        updatePercentage(col);
+                    });
                     board.appendChild(cell);
                 }
             }
         }
-
+    
         function generatePlayerBoard(boardId) {
             const board = document.getElementById(boardId);
             board.innerHTML = "";
@@ -221,17 +222,33 @@
                 }
             }
         }
-
-
-        function resetBoard(boardId) {
+    
+        function generatePercentageRow(boardId) {
             const board = document.getElementById(boardId);
-            if (board) {
-                board.querySelectorAll(".bingo-cell, .player-cell").forEach(cell => {
-                    cell.classList.remove("marked");
-                });
+            board.innerHTML = "";
+    
+            for (let i = 0; i < 5; i++) {
+                const cell = document.createElement("div");
+                cell.classList.add("percentage-cell");
+                cell.setAttribute("data-column", i);
+                cell.textContent = "0%";
+                board.appendChild(cell);
             }
         }
-
+    
+        function updatePercentage(columnIndex) {
+            const totalCells = 15;
+            const markedCells = document.querySelectorAll(`.bingo-cell.marked[data-column="${columnIndex}"]`).length;
+            const percentage = Math.round((markedCells / totalCells) * 100);
+            
+            document.querySelector(`.percentage-cell[data-column="${columnIndex}"]`).textContent = percentage + "%";
+        }
+    
+        function resetBoard(boardId) {
+            document.querySelectorAll(`#${boardId} .bingo-cell`).forEach(cell => cell.classList.remove("marked"));
+            document.querySelectorAll(".percentage-cell").forEach(cell => cell.textContent = "0%");
+        }
     </script>
+    
 </body>
 </html>
