@@ -92,6 +92,20 @@ body {
     transform: scale(1.05);
 }
 
+.btn-icon {
+    font-size: 1.5rem;
+    padding: 6px 12px;
+    border-radius: 50%;
+    transition: background-color 0.3s, transform 0.2s;
+    line-height: 1;
+    border-color: #f4d35e;
+}
+
+.btn-icon:hover {
+    background-color: #f4d35e;
+    transform: scale(1.1);
+}
+
 @media (max-width: 768px) {
     .bingo-board {
         gap: 5px;
