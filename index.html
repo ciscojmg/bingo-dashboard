@@ -2,349 +2,82 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bingo Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bingo Dashboard</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&display=swap" rel="stylesheet" />
 
-    <style>
-        body {
-            font-family: 'Fredoka', sans-serif;
-            text-align: center;
-            background: linear-gradient(135deg, #fff3b0, #f4d35e);
-            color: #333;
-            padding: 20px;
-        }
-
-        /* Ajuste responsivo para las imágenes */
-        .bingo-img-container img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        @media (min-width: 992px) {
-            .bingo-img-container img {
-                max-width: 180px;
-            }
-        }
-
-        .bingo-header {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            font-size: 26px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        /* Cartón Bingo */
-        .bingo-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            max-width: 100%;
-            overflow: hidden;
-        }
-
-        .bingo-board {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin: 10px 0;
-            place-items: center;
-            padding: 10px;
-        }
-
-        /* Celdas de Bingo */
-        .bingo-cell,
-        .player-cell {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #f4d35e, #ee964b);
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.1s, box-shadow 0.2s;
-        }
-
-        .bingo-cell.marked {
-            background: linear-gradient(135deg, #ff5733, #c70039);
-            box-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
-            transform: scale(1.1);
-        }
-
-        /* Cartón del Jugador */
-        .player-cell {
-            background: #ddd;
-        }
-
-        .player-cell.marked {
-            background: linear-gradient(135deg, #3498db, #2c3e50);
-            box-shadow: 0 0 12px rgba(52, 152, 219, 0.8);
-        }
-
-        /* Botón Reset */
-        .reset-btn {
-            padding: 12px 25px;
-            background: #f77f00;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background 0.2s, transform 0.1s;
-            margin-top: 20px;
-        }
-
-        .reset-btn:hover {
-            background: #ff9f1c;
-            transform: scale(1.05);
-        }
-
-        /* Ajustes responsivos para pantallas pequeñas */
-        @media (max-width: 768px) {
-            .bingo-board {
-                gap: 5px;
-                padding: 5px;
-            }
-
-            .bingo-cell,
-            .player-cell {
-                width: 50px;
-                height: 50px;
-                font-size: 18px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .bingo-board {
-                gap: 3px;
-                padding: 2px;
-            }
-
-            .bingo-cell,
-            .player-cell {
-                width: 40px;
-                height: 40px;
-                font-size: 14px;
-            }
-        }
-    </style>
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body>
-    <div class="container text-center">
-        <div class="row justify-content-center mb-3 bingo-img-container">
-            <div class="col-6 col-md-4">
-                <img src="img/logo.png" alt="Bingo Logo" class="img-fluid">
-            </div>
-            <div class="col-6 col-md-4">
-                <img src="img/rueda.png" alt="Bingo Rueda" class="img-fluid">
-            </div>
-        </div>
-
-        <h1>Bienvenidos al Bingo</h1>
-
-        <div class="row justify-content-center mt-4">
-            <!-- Cartón Dashboard -->
-            <div class="col-12 col-md-12 col-lg-5 mb-4">
-                <div class="bingo-card">
-                    <h2>Dashboard Bingo</h2>
-                    <div class="bingo-header">
-                        <div>B</div>
-                        <div>I</div>
-                        <div>N</div>
-                        <div>G</div>
-                        <div>O</div>
-                    </div>
-                    <div class="bingo-board" id="bingoBoard"></div>
-                    <div class="bingo-board" id="bingoPercentage"></div>
-                    <div class="progress mt-3">
-                        <div id="bingoProgressBar" class="progress-bar bg-warning" role="progressbar" style="width: 0%;"
-                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                    </div>
-
-                    <button onclick="resetBoard('bingoBoard')" class="reset-btn">Desmarcar Todo</button>
-                </div>
-            </div>
-
-            <!-- Cartón del Jugador -->
-            <div class="col-12 col-md-12 col-lg-5 mb-4">
-                <div class="bingo-card">
-                    <h2>Cartón del Jugador</h2>
-                    <div class="bingo-header">
-                        <div>B</div>
-                        <div>I</div>
-                        <div>N</div>
-                        <div>G</div>
-                        <div>O</div>
-                    </div>
-                    <div class="bingo-board" id="playerBoard"></div>
-                    <button onclick="resetBoard('playerBoard')" class="reset-btn">Desmarcar Todo</button>
-                </div>
-            </div>
-        </div>
-
+  <div class="container text-center">
+    <div class="row justify-content-center mb-3 bingo-img-container">
+      <div class="col-6 col-md-4">
+        <img src="img/logo.png" alt="Bingo Logo" class="img-fluid" />
+      </div>
+      <div class="col-6 col-md-4">
+        <img src="img/rueda.png" alt="Bingo Rueda" class="img-fluid" />
+      </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0"></script>
+    <h1 class="d-inline-block align-middle">
+        Bienvenidos al Bingo
+    </h1>
+    <button id="toggleSound" class="btn btn-sm btn-light align-middle ms-2" title="Activar/Desactivar Sonido"
+        onclick="toggleMute()">
+        🔊
+    </button>
 
-    <script>
-        let lastConfettiThreshold = 0; // Almacena el último umbral de confetti lanzado
+    <div class="row justify-content-center mt-4">
+      <!-- Cartón Dashboard -->
+      <div class="col-12 col-md-12 col-lg-5 mb-4">
+        <div class="bingo-card">
+          <h2>Dashboard Bingo</h2>
+          <div class="bingo-header">
+            <div>B</div>
+            <div>I</div>
+            <div>N</div>
+            <div>G</div>
+            <div>O</div>
+          </div>
+          <div class="bingo-board" id="bingoBoard"></div>
+          <div class="bingo-board" id="bingoPercentage"></div>
+          <div class="progress mt-3">
+            <div id="bingoProgressBar" class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+          </div>
 
-        document.addEventListener("DOMContentLoaded", function () {
-            generateBingoBoard("bingoBoard");
-            generatePercentageRow("bingoPercentage");
-            generatePlayerBoard("playerBoard");
-        });
+          <button onclick="resetBoard('bingoBoard')" class="reset-btn">Desmarcar Todo</button>
+        </div>
+      </div>
 
-        function updateTotalProgress() {
-            const totalCells = 75; // Total de bolitas
-            const markedCells = document.querySelectorAll(`.bingo-cell.marked`).length;
-            const percentage = Math.round((markedCells / totalCells) * 100);
+      <!-- Cartón del Jugador -->
+      <div class="col-12 col-md-12 col-lg-5 mb-4">
+        <div class="bingo-card">
+          <h2>Cartón del Jugador</h2>
+          <div class="bingo-header">
+            <div>B</div>
+            <div>I</div>
+            <div>N</div>
+            <div>G</div>
+            <div>O</div>
+          </div>
+          <div class="bingo-board" id="playerBoard"></div>
+          <button onclick="resetBoard('playerBoard')" class="reset-btn">Desmarcar Todo</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            // Actualizar la barra de progreso
-            const progressBar = document.getElementById("bingoProgressBar");
-            progressBar.style.width = percentage + "%";
-            progressBar.setAttribute("aria-valuenow", percentage);
-            progressBar.textContent = percentage + "%";
-
-            // 🚀 Disparar confetti progresivo en cada múltiplo de 10% (10, 20, 30... hasta 100)
-            if (percentage >= lastConfettiThreshold + 10) {
-                fireConfetti(percentage);
-                lastConfettiThreshold += 10; // Actualizar el umbral del confetti lanzado
-            }
-
-            // Resetear si el porcentaje baja (para poder lanzar confetti otra vez)
-            if (percentage < lastConfettiThreshold) {
-                lastConfettiThreshold = Math.floor(percentage / 10) * 10;
-            }
-        }
-
-        function fireConfetti(percentage) {
-            const count = 200 + (percentage * 2); // Aumenta la cantidad de confetti
-            const defaults = { origin: { y: 0.7 } };
-
-            function fire(particleRatio, opts) {
-                confetti(
-                    Object.assign({}, defaults, opts, {
-                        particleCount: Math.floor(count * particleRatio),
-                    })
-                );
-            }
-
-            fire(0.25, {
-                spread: 26 + percentage / 2,
-                startVelocity: 55 + percentage / 3,
-            });
-
-            fire(0.2, {
-                spread: 60 + percentage / 2,
-            });
-
-            fire(0.35, {
-                spread: 100 + percentage / 2,
-                decay: 0.91,
-                scalar: 0.8 + percentage / 100,
-            });
-
-            fire(0.1, {
-                spread: 120 + percentage / 2,
-                startVelocity: 25 + percentage / 3,
-                decay: 0.92,
-                scalar: 1.2 + percentage / 100,
-            });
-
-            fire(0.1, {
-                spread: 120 + percentage / 2,
-                startVelocity: 45 + percentage / 3,
-            });
-        }
-
-        function generateBingoBoard(boardId) {
-            const board = document.getElementById(boardId);
-            board.innerHTML = "";
-            const columns = ["B", "I", "N", "G", "O"];
-
-            for (let row = 0; row < 15; row++) {
-                for (let col = 0; col < columns.length; col++) {
-                    const num = row + 1 + col * 15; // Genera el número correcto en la columna
-                    const cell = document.createElement("div");
-                    cell.classList.add("bingo-cell");
-                    cell.setAttribute("data-column", col);
-                    cell.textContent = num;
-                    cell.addEventListener("click", () => {
-                        cell.classList.toggle("marked");
-                        updatePercentage(col);
-                        updateTotalProgress(); // Actualiza la barra de progreso general
-                    });
-                    board.appendChild(cell);
-                }
-            }
-        }
-
-        function generatePlayerBoard(boardId) {
-            const board = document.getElementById(boardId);
-            board.innerHTML = "";
-            for (let i = 0; i < 5; i++) {
-                for (let j = 0; j < 5; j++) {
-                    const cell = document.createElement("div");
-                    cell.classList.add("player-cell");
-                    cell.addEventListener("click", () => cell.classList.toggle("marked"));
-                    board.appendChild(cell);
-                }
-            }
-        }
-
-        function generatePercentageRow(boardId) {
-            const board = document.getElementById(boardId);
-            board.innerHTML = "";
-
-            for (let i = 0; i < 5; i++) {
-                const cell = document.createElement("div");
-                cell.classList.add("percentage-cell");
-                cell.setAttribute("data-column", i);
-                cell.textContent = "0%";
-                board.appendChild(cell);
-            }
-        }
-
-        function updatePercentage(columnIndex) {
-            const totalCells = 15;
-            const markedCells = document.querySelectorAll(`.bingo-cell.marked[data-column="${columnIndex}"]`).length;
-            const percentage = Math.round((markedCells / totalCells) * 100);
-
-            document.querySelector(`.percentage-cell[data-column="${columnIndex}"]`).textContent = percentage + "%";
-        }
-
-        function resetBoard(boardId) {
-            // Desmarcar las celdas tanto del Bingo principal como del Cartón del Jugador
-            document.querySelectorAll(`#${boardId} .bingo-cell, #${boardId} .player-cell`).forEach(cell => {
-                cell.classList.remove("marked");
-            });
-
-            // Si es el cartón principal, reiniciar porcentajes y confetti
-            if (boardId === "bingoBoard") {
-                document.querySelectorAll(".percentage-cell").forEach(cell => cell.textContent = "0%");
-                lastConfettiThreshold = 0; // Reinicia la condición del confetti
-                updateTotalProgress(); // Reinicia la barra de progreso
-            }
-        }
-    </script>
-
-
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0"></script>
+  <script src="js/script.js"></script>
 </body>
 
 </html>
